@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>视频文字检查工具</title>
+  <meta name="description" content="在本地检查视频字幕、Word文稿和审核词表，并由审核人员确认结果。">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">审</span><div><strong>视频文字检查</strong><span>文件只在当前电脑处理</span></div></div>
+    <button id="suggestionsButton" class="quiet-button">下载待整理建议</button>
+  </header>
+
+  <main>
+    <section id="uploadView" class="workspace">
+      <div class="intro-row">
+        <div><p class="eyebrow">开始一次检查</p><h1>上传材料</h1></div>
+        <div class="steps"><span class="active">1 上传</span><span>2 检查</span><span>3 人工确认</span><span>4 下载</span></div>
+      </div>
+      <form id="auditForm" class="upload-grid">
+        <label class="upload-card optional"><span class="number">1</span><strong>视频文件</strong><small>可选。第一版用于记录视频名称，不会保存视频。</small><input id="videos" type="file" accept="video/*" multiple></label>
+        <label class="upload-card"><span class="number">2</span><strong>字幕文件</strong><small>请选择一个或多个 SRT 文件。</small><input id="subtitles" type="file" accept=".srt" multiple required></label>
+        <label class="upload-card"><span class="number">3</span><strong>Word文稿</strong><small>可选。用于检查文稿和字幕是否相同。</small><input id="document" type="file" accept=".docx"></label>
+        <label class="upload-card"><span class="number">4</span><strong>审核词表</strong><small>请选择当前使用的 Excel 词表。</small><input id="lexicon" type="file" accept=".xlsx" required></label>
+        <div class="form-footer"><p id="uploadHint">请选择字幕文件和审核词表。</p><button class="primary-button" type="submit">开始检查</button></div>
+      </form>
+    </section>
+
+    <section id="loadingView" class="center-state hidden"><div class="loader"></div><h2>正在检查文字</h2><p>会检查敏感词、字幕顺序、时间重叠，以及文稿和字幕是否相同。</p></section>
+
+    <section id="resultsView" class="workspace hidden">
+      <div class="results-head">
+        <div><button id="backButton" class="back-button">← 重新上传</button><p class="eyebrow">检查结果</p><h1><span id="issueCount">0</span> 个位置需要查看</h1><p id="resultSummary" class="muted"></p></div>
+        <div class="head-actions"><button id="saveButton" class="secondary-button">保存复核结果</button><button id="downloadButton" class="primary-button">下载检查报告</button></div>
+      </div>
+      <div class="filter-row"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="需要修改">需要修改</button><button class="filter" data-filter="需要确认">需要确认</button><button class="filter" data-filter="已经处理好">已经处理好</button></div>
+      <div id="issueList" class="issue-list"></div>
+      <div id="emptyState" class="empty hidden"><h2>没有找到需要查看的位置</h2><p>建议仍然随机完整检查一小部分视频，确认没有遗漏。</p></div>
+    </section>
+  </main>
+  <div id="toast" class="toast hidden"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
